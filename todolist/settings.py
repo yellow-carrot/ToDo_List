@@ -34,7 +34,7 @@ if ENV_PATH.is_file():
 # DEBUG = True
 
 SECRET_KEY = env.str('SECRET_KEY')
-DEBUG = env.bool('DEBUG')
+DEBUG = env.str('DEBUG', default=False)
 
 ALLOWED_HOSTS = ['*']
 
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -60,6 +61,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'todolist.urls'
+
+AUTH_USER_MODEL = 'core.User'
 
 TEMPLATES = [
     {
@@ -83,9 +86,13 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env.str('DB_NAME'),
+        "USER": env.str('DB_USER'),
+        "PASSWORD": env.str('DB_PASSWORD'),
+        "HOST": env('DB_HOST', default='127.0.0.1'),
+        "PORT": "5432",
     }
 }
 

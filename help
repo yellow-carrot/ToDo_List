@@ -1,0 +1,2 @@
+sudo docker-compose exec db psql -U postgres
+docker-compose up -d db

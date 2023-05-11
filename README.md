@@ -7,7 +7,7 @@
 - Django 4.2.1
 - Postgres
 
-## Dependencies
+## Starting app:
 
 1. Install and activate virtual environment
 2. Install package manager [poetry](https://python-poetry.org/): `pip install poetry`

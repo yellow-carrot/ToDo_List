@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 
 services:
   front:
@@ -13,7 +13,7 @@ services:
   api:
     build: .
     container_name: api
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python3 manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     volumes:

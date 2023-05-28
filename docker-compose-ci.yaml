@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: ${IMAGE_TAG}:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    image: sermalenk/skypro-front:lesson-36
     ports:
       - 25000:25000
     depends_on:
@@ -13,7 +13,7 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_HOST=db
   db:
-    image: postgres
+    image: postgres:15.2
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}

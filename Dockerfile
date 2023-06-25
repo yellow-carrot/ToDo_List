@@ -1,11 +1,20 @@
 FROM python:3.10-slim
 
-ENV HOME /app
-WORKDIR $HOME
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONNUNBUFFERED 1
 
-COPY requirements.txt .
-RUN python3 -m pip install --no-cache -r requirements.txt
+RUN pip install --upgrade pip
 
-COPY . .
+ADD requirements.txt /usr/src/app/requirements.txt
+
+RUN pip install -r /usr/src/app/requirements.txt
+
+COPY . /usr/src/app
+
+WORKDIR /usr/src/app/todolist
+
+COPY . /usr/src/app/todolist
+
+EXPOSE 8000
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

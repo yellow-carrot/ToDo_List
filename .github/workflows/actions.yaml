@@ -15,7 +15,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           logout: true
 
-      - name: Build and Push Container
+      - name: build and push container
         run: |-
             docker build -t yellowcarrot/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
             docker push yellowcarrot/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID

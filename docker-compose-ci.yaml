@@ -41,7 +41,7 @@ services:
       - django_static:/usr/src/app/django_static
 
   frontend:
-    image: sermalenk/skypro-front:lesson-36
+    image: sermalenk/skypro-front:lesson-34
     container_name: frontend
     restart: always
     ports:

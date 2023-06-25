@@ -1,6 +1,6 @@
 FROM python:3.10-slim
 
-ENV HOME /app
+ENV HOME /app/todolist
 WORKDIR $HOME
 
 RUN pip install --upgrade pip

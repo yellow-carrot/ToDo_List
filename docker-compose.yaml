@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   front:
-    image: sermalenk/skypro-front:lesson-36
+    image: sermalenk/skypro-front:lesson-34
     container_name: frontend
     ports:
       - "80:80"
@@ -13,12 +13,12 @@ services:
   api:
     build: .
     container_name: api
-    command: python3 manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     volumes:
       - .:/app
-    env_file: ./.env
+    env_file: ./todolist/.env
     environment:
       DB_HOST: db
     depends_on:
@@ -30,7 +30,7 @@ services:
   migrations:
     build:
       context: .
-    env_file: ./.env
+    env_file: ./todolist/.env
     environment:
       DB_HOST: db
     container_name: migrations
@@ -44,9 +44,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: "postgres"
+      POSTGRES_DB: "${DB_NAME}"
       POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
     restart: always
     container_name: db
     volumes:

@@ -17,8 +17,8 @@ jobs:
 
       - name: build and push container
         run: |-
-            docker build -t yellowcarrot/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
-            docker push yellowcarrot/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+            docker build -t yellowcarrot/todolist:test_001
+            docker push yellowcarrot/todolist:test_001
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push

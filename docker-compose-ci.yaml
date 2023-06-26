@@ -1,8 +1,9 @@
 version: '3.8'
 
 services:
-  app:
-    image: sermalenk/skypro-front:lesson-36
+
+  front:
+    image: sermalenk/skypro-front:lesson-34
     ports:
       - 25000:25000
     depends_on:
@@ -12,9 +13,32 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - DB_HOST=db
-  db:
-    image: postgres:15.2
+
+  api:
+    image: yellowcarrot/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    restart: always
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+    depends_on:
+      db:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    ports:
+      - "8000:8000"
+
+  migrations:
+    image: yellowcarrot/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "python ./manage.py migrate"

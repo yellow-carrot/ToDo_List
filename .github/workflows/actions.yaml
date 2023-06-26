@@ -17,8 +17,8 @@ jobs:
 
       - name: build and push container
         run: |-
-            docker build -t yellowcarrot/todolist
-            docker push yellowcarrot/todolist
+            docker build -t yellowcarrot/todolist:main-5105950597
+            docker push yellowcarrot/todolist:main-5105950597
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push

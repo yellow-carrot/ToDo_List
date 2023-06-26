@@ -25,20 +25,6 @@ services:
         condition: service_completed_successfully
     ports:
       - "8000:8000"
-
-  migrations:
-    image: yellowcarrot/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
-    environment:
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_HOST=${DB_HOST}
-    depends_on:
-      db:
-        condition: service_healthy
-    command: >
-      sh -c "python ./manage.py migrate" 
-
   db:
     image: postgres:latest
     environment:
@@ -55,6 +41,21 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  migrations:
+    image: yellowcarrot/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "python ./manage.py migrate" 
+
+  
 
 volumes:
   pg_data:

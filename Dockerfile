@@ -1,19 +1,17 @@
 FROM python:3.10-slim
 
-ENV HOME /app/todolist
-WORKDIR $HOME
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONNUNBUFFERED 1
 
 RUN pip install --upgrade pip
 
-ADD requirements.txt /usr/src/app/requirements.txt
+WORKDIR /usr/src/app
 
-RUN pip install -r /usr/src/app/requirements.txt
+ADD requirements.txt .
 
-COPY . /usr/src/app
+RUN pip install -r requirements.txt
 
-WORKDIR /usr/src/app/todolist
-
-COPY . /usr/src/app/todolist
+COPY . .
 
 EXPOSE 8000
 

@@ -35,9 +35,9 @@ services:
     volumes:
       - .:/app
 
-  front:
+  frontend:
     image: sermalenk/skypro-front:lesson-38
-    container-name: front
+    container_name: front
     restart: always
     ports:
       - "80:80"

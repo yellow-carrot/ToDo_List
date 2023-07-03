@@ -53,6 +53,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
-          script: |-
-            cd deploy
-            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose up -d
+          script: |
+            cd todolist-app
+            docker compose down
+            docker compose up -d

@@ -1,31 +1,31 @@
 version: "3.9"
 
 services:
-
-  frontend:
+  front:
     image: sermalenk/skypro-front:lesson-34
+    container_name: front
+    ports:
+      - "80:80"
     restart: always
     depends_on:
       - api
-    ports:
-      - "80:80"
 
   api:
-    image: yellowcarrot/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
-    restart: always
+    build: .
+    container_name: api
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    env_file: .env
     environment:
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_HOST=${DB_HOST}
+      DB_HOST: db
     depends_on:
       db:
         condition: service_healthy
       migrations:
         condition: service_completed_successfully
-    ports:
-      - "8000:8000"
-
 
   migrations:
     build:
@@ -40,16 +40,18 @@ services:
     command: python manage.py migrate
 
   db:
-    image: postgres:latest
+    image: postgres:15.2
+    ports:
+      - "5432:5432"
+    env_file: .env
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     restart: always
-    ports:
-      - 5432:5432
+    container_name: db
     volumes:
-      - ./pg_data:/var/lib/postgresql/data
+      - ./pg_data:/var/lib/postgresql/data/
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
@@ -57,4 +59,5 @@ services:
       retries: 5
 
 volumes:
-  pg_data:
+  db_data:
+  frontend:

@@ -36,7 +36,7 @@ services:
       - .:/app
 
   front:
-    image: sermalenk/skypro-front:lesson-34
+    image: sermalenk/skypro-front:lesson-38
     container-name: front
     restart: always
     ports:

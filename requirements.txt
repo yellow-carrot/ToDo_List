@@ -21,5 +21,4 @@ social-auth-app-django==5.2.0
 social-auth-core==4.4.2
 sqlparse==0.4.4
 sympy==1.12
--e git+https://github.com/yellow-carrot/ToDo_List.git@0ac4a02986e3fad45d63ea552ccbd6ebcd33bc49#egg=todolist
 urllib3==2.0.3

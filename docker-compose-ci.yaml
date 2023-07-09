@@ -35,8 +35,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    volumes:
-      - .:/app
 
   frontend:
     image: sermalenk/skypro-front:lesson-36

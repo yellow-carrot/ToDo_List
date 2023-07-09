@@ -39,7 +39,7 @@ services:
       - .:/app
 
   frontend:
-    image: sermalenk/skypro-front:lesson-35
+    image: sermalenk/skypro-front:lesson-36
     container_name: front
     restart: always
     ports:

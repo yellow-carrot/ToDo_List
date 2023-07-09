@@ -55,7 +55,7 @@ services:
       - "5432:5432"
     env_file: .env
     environment:
-      POSTGRES_DB: "postgres"
+      POSTGRES_DB: "todolist_postgres"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
     restart: always
@@ -63,7 +63,7 @@ services:
     volumes:
       - ./pg_data:/var/lib/postgresql/data/
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d todolist_postgres"]
       interval: 5s
       timeout: 5s
       retries: 5

@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   db:
@@ -22,12 +22,13 @@ services:
     image: yellowcarrot/todolist:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
     container_name: api
     command: python manage.py runserver 0.0.0.0:8000
-    env_file: .env
     environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
-      DB_HOST: ${DB_HOST}
+      SECRET_KEY: ${SECRET_KEY}
       SOCIAL_AUTH_VK_OAUTH2_KEY: ${SOCIAL_AUTH_VK_OAUTH2_KEY}
       SOCIAL_AUTH_VK_OAUTH2_SECRET: ${SOCIAL_AUTH_VK_OAUTH2_SECRET}
     restart: always
@@ -38,7 +39,7 @@ services:
       - .:/app
 
   frontend:
-    image: sermalenk/skypro-front:lesson-38
+    image: sermalenk/skypro-front:lesson-35
     container_name: front
     restart: always
     ports:
@@ -46,6 +47,8 @@ services:
     depends_on:
       api:
         condition: service_started
-
+    volumes:
+      - django_static:/usr/share/nginx/nginx/html/django_static\
 volumes:
   db_data:
+  django_static:

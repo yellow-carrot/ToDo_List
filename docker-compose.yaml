@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   frontend:
-    image: sermalenk/skypro-front:lesson-38
+    image: sermalenk/skypro-front:lesson-35
     container_name: front
     ports:
       - "80:80"
@@ -15,7 +15,7 @@ services:
     container_name: api
     command: python manage.py runserver 0.0.0.0:8000
     ports:
-      - "25000:25000"
+      - "8000:8000"
     env_file: .env
     environment:
       DB_HOST: db

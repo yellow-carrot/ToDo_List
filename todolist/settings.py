@@ -19,7 +19,6 @@ env = environ.Env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 ENV_PATH = BASE_DIR.joinpath('.env')
 if ENV_PATH.is_file():
     env.read_env(ENV_PATH)
@@ -49,8 +48,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
-    'social_django',
     'core',
+    'social_django',
+
 ]
 
 MIDDLEWARE = [
@@ -64,8 +64,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'todolist.urls'
-
-AUTH_USER_MODEL = 'core.User'
 
 TEMPLATES = [
     {
@@ -131,8 +129,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
-MEDIA_URL = 'django_media/'
+STATIC_URL = '/django_static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "django_static")
+
+MEDIA_URL = '/django_media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "django_media")
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'core.User'
 
@@ -141,11 +144,16 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend', ],
+}
 
 SOCIAL_AUTH_JSONFIELD_ENABLED = True
 SOCIAL_AUTH_POSTGRES_ENABLED = True

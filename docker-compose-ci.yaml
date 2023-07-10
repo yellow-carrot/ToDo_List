@@ -3,13 +3,10 @@ version: '3.9'
 services:
   db:
     image: postgres:15.2
-    env_file: .env
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
-    restart: always
-    container_name: db
     volumes:
       - ./pg_data:/var/lib/postgresql/data/
     healthcheck:
@@ -31,15 +28,30 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       SOCIAL_AUTH_VK_OAUTH2_KEY: ${SOCIAL_AUTH_VK_OAUTH2_KEY}
       SOCIAL_AUTH_VK_OAUTH2_SECRET: ${SOCIAL_AUTH_VK_OAUTH2_SECRET}
-    restart: always
     depends_on:
       db:
         condition: service_healthy
 
+  migrations:
+    image: yellowcarrot/todolist:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
+    container_name: migrations
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      DB_HOST: db
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SOCIAL_AUTH_VK_OAUTH2_KEY: ${SOCIAL_AUTH_VK_OAUTH2_KEY}
+      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${SOCIAL_AUTH_VK_OAUTH2_SECRET}
+    depends_on:
+      db:
+        condition: service_healthy
+    command:
+      sh -c "python ./manage.py migrate"
+
   frontend:
     image: sermalenk/skypro-front:lesson-36
     container_name: front
-    restart: always
     ports:
       - "80:80"
     depends_on:
@@ -48,5 +60,4 @@ services:
     volumes:
       - django_static:/usr/share/nginx/nginx/html/django_static\
 volumes:
-  db_data:
   django_static:

@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from core.models import User
@@ -70,8 +70,16 @@ class ChangePasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError("New password must be different from the old password")
         return value
 
-    def update(self, instance, validated_data):
-        new_password = validated_data['new_password']
-        instance.password = make_password(new_password)
-        instance.save()
-        return instance
+
+class PasswordField(serializers.CharField):
+    def __init__(self, validate: bool = True, **kwargs) -> None:
+        kwargs.setdefault('write_only', True)
+        kwargs.setdefault('required', True)
+        super().__init__(**kwargs)
+        if validate:
+            self.validators.append(validate_password)
+
+
+class UpdatePasswordSerializer(serializers.Serializer):
+    old_password = PasswordField(validate=False)
+    new_password = PasswordField()

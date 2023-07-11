@@ -25,9 +25,9 @@ class GoalCategory(DatesModelMixin):
     is_deleted = models.BooleanField(verbose_name="Удалена", default=False)
 
     def save(self, *args, **kwargs):
-        if not self.pk:  # if not self.id: # Когда объект только создается, у него еще нет id
-            self.created = timezone.now()  # проставляем дату создания
-        self.updated = timezone.now()  # проставляем дату обновления
+        if not self.pk:
+            self.created = timezone.now()
+        self.updated = timezone.now()
         return super().save(*args, **kwargs)
 
     def __str__(self):

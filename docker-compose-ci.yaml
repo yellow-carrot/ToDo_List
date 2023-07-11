@@ -50,7 +50,7 @@ services:
       sh -c "python ./manage.py migrate"
 
   frontend:
-    image: sermalenk/skypro-front:lesson-38
+    image: sermalenk/skypro-front:lesson-37
     container_name: front
     ports:
       - "80:80"

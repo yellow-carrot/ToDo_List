@@ -19,15 +19,19 @@ class DatesModelMixin(models.Model):
 
 
 class GoalCategory(DatesModelMixin):
+    board = models.ForeignKey("Board", verbose_name="Доска ", on_delete=models.PROTECT, related_name="categories")
     title = models.CharField(verbose_name="Название", max_length=255)
     user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.PROTECT)
     is_deleted = models.BooleanField(verbose_name="Удалена", default=False)
 
     def save(self, *args, **kwargs):
-        if not self.pk:
-            self.created = timezone.now()
-        self.updated = timezone.now()
+        if not self.pk:  # if not self.id: # Когда объект только создается, у него еще нет id
+            self.created = timezone.now()  # проставляем дату создания
+        self.updated = timezone.now()  # проставляем дату обновления
         return super().save(*args, **kwargs)
+
+    def __str__(self):
+        return '{}'.format(self.title)
 
     class Meta:
         verbose_name = "Категория"
@@ -56,6 +60,8 @@ class Goal(DatesModelMixin):
     description = models.TextField(verbose_name="Описание", null=True, blank=True, default=None)
     due_date = models.DateField(verbose_name="Дата выполнения", null=True, blank=True, default=None)
 
+    def __str__(self):
+        return '{}'.format(self.title)
 
     class Meta:
         verbose_name = "Цель"
@@ -67,6 +73,43 @@ class GoalComment(DatesModelMixin):
     user = models.ForeignKey(User, verbose_name="Автор ", related_name="goal_comments", on_delete=models.PROTECT)
     text = models.TextField(verbose_name="Текст")
 
+    def __str__(self):
+        return '{}: {}'.format(self.user, self.goal)
+
     class Meta:
         verbose_name = "Комментарий к цели"
         verbose_name_plural = "Комментарии к целям"
+
+
+class Board(DatesModelMixin):
+    title = models.CharField(verbose_name="Название", max_length=255)
+    is_deleted = models.BooleanField(verbose_name="Удалена", default=False)
+
+    def __str__(self):
+        return '{}'.format(self.title)
+
+    class Meta:
+        verbose_name = "Доска"
+        verbose_name_plural = "Доски"
+
+
+class BoardParticipant(DatesModelMixin):
+    class Role(models.IntegerChoices):
+        owner = 1, "Владелец"
+        writer = 2, "Редактор"
+        reader = 3, "Читатель"
+
+    editable_choices = Role.choices
+    editable_choices.pop(0)
+
+    board = models.ForeignKey(Board, verbose_name="Доска", on_delete=models.PROTECT, related_name="participants")
+    user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.PROTECT, related_name="participants")
+    role = models.PositiveSmallIntegerField(verbose_name="Роль", choices=Role.choices, default=Role.owner)
+
+    def __str__(self):
+        return '{}: {}'.format(self.board, self.user)
+
+    class Meta:
+        unique_together = ("board", "user")
+        verbose_name = "Участник"
+        verbose_name_plural = "Участники"

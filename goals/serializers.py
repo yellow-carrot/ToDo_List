@@ -161,7 +161,6 @@ class BoardSerializer(serializers.ModelSerializer):
 
 
 class BoardListSerializer(serializers.ModelSerializer):
-    """ Модель выводит все объекты """
     class Meta:
         model = Board
         fields = '__all__'

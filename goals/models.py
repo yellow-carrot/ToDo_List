@@ -19,7 +19,7 @@ class DatesModelMixin(models.Model):
 
 
 class GoalCategory(DatesModelMixin):
-    board = models.ForeignKey("Board", verbose_name="Доска ", on_delete=models.PROTECT, related_name="categories")
+    board = models.ForeignKey("Board", verbose_name="Доска ", on_delete=models.PROTECT, related_name="categories", blank=True, null=True)
     title = models.CharField(verbose_name="Название", max_length=255)
     user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.PROTECT)
     is_deleted = models.BooleanField(verbose_name="Удалена", default=False)
@@ -82,7 +82,7 @@ class GoalComment(DatesModelMixin):
 
 
 class Board(DatesModelMixin):
-    title = models.CharField(verbose_name="Название", max_length=255)
+    title = models.CharField(verbose_name="Название", max_length=255, blank=True, null=True)
     is_deleted = models.BooleanField(verbose_name="Удалена", default=False)
 
     def __str__(self):

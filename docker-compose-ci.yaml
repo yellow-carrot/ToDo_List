@@ -15,22 +15,6 @@ services:
       timeout: 5s
       retries: 5
 
-  api:
-    image: yellowcarrot/todolist:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
-    container_name: api
-    command: python manage.py runserver 0.0.0.0:8000
-    environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      SECRET_KEY: you-will-never-guess
-      SOCIAL_AUTH_VK_OAUTH2_KEY: ${SOCIAL_AUTH_VK_OAUTH2_KEY}
-      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${SOCIAL_AUTH_VK_OAUTH2_SECRET}
-    depends_on:
-      db:
-        condition: service_healthy
 
   migrations:
     image: yellowcarrot/todolist:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
@@ -48,6 +32,23 @@ services:
         condition: service_healthy
     command:
       sh -c "python ./manage.py migrate"
+
+  api:
+    image: yellowcarrot/todolist:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
+    container_name: api
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SECRET_KEY: you-will-never-guess
+      SOCIAL_AUTH_VK_OAUTH2_KEY: ${SOCIAL_AUTH_VK_OAUTH2_KEY}
+      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${SOCIAL_AUTH_VK_OAUTH2_SECRET}
+    depends_on:
+      db:
+        condition: service_healthy
 
   frontend:
     image: sermalenk/skypro-front:lesson-37

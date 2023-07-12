@@ -4,7 +4,7 @@ services:
 
   frontend:
     image: sermalenk/skypro-front:lesson-37
-    container_name: front
+    container_name: frontend
     ports:
       - "80:80"
     depends_on:
@@ -60,6 +60,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    container_name: db
 
 volumes:
   django_static:

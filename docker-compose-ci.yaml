@@ -61,6 +61,7 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       BOT_TOKEN: ${BOT_TOKEN}
+      SECRET_KEY: you-will-never-guess
     depends_on:
       db:
         condition: service_healthy

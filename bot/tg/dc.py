@@ -54,8 +54,6 @@ class GetUpdatesResponse:
     ok: bool
     result: List[UpdateObj]
 
-    Schema: ClassVar[Type[Schema]] = Schema
-
     class Meta:
         unknown = EXCLUDE
 
@@ -64,8 +62,6 @@ class GetUpdatesResponse:
 class SendMessageResponse:
     ok: bool
     result: Message
-
-    Schema: ClassVar[Type[Schema]] = Schema
 
     class Meta:
         unknown = EXCLUDE

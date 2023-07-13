@@ -32,7 +32,6 @@ class Command(BaseCommand):
                 self.handle_message(item.message)
 
     def handle_message(self, msg: Message):
-        # logger.info(f'{msg}')
         tg_user, created = TgUser.objects.get_or_create(user_ud=msg.from_.id, defaults={"chat_id": msg.chat.id,
                                                                                         "username": msg.from_.username})
         if "/start" in msg.text:

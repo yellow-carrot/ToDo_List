@@ -169,7 +169,7 @@ SOCIAL_AUTH_POSTGRES_ENABLED = True
 SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email', 'photos', 'notify']
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
-BOT_TOKEN = os.environ.get("BOT_TOKEN")
+BOT_TOKEN = '6039372805:AAGnSq8yNkMIoP4usvqQ0LuG4pztR6YyUmc'
 
 SOCIAL_AUTH_PIPELINE = [
     'social_core.pipeline.social_auth.social_details',

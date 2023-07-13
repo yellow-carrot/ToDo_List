@@ -14,6 +14,7 @@ class TgClient:
         url = self.get_url("getUpdates")
         resp = requests.get(url, params={"offset": offset, "timeout": timeout,
                                          "allowed_updates": ["update_id", "message"]})
+        print(resp.json())
         return GetUpdatesResponse.Schema().load(resp.json())
 
     def send_message(self, chat_id: int, text: str) -> SendMessageResponse:

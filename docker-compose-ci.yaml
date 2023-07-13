@@ -67,7 +67,7 @@ services:
     command: python manage.py runbot
 
   frontend:
-    image: sermalenk/skypro-front:lesson-37
+    image: sermalenk/skypro-front:lesson-38
     container_name: frontend
     ports:
       - "80:80"

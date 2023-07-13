@@ -9,7 +9,7 @@ class DatesModelMixin(models.Model):
     updated = models.DateTimeField(verbose_name="Дата последнего обновления")
 
     def save(self, *args, **kwargs):
-        if not self.id:
+        if not self.pk:
             self.created = timezone.now()
         self.updated = timezone.now()
         return super().save(*args, **kwargs)
@@ -23,12 +23,6 @@ class GoalCategory(DatesModelMixin):
     title = models.CharField(verbose_name="Название", max_length=255)
     user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.PROTECT)
     is_deleted = models.BooleanField(verbose_name="Удалена", default=False)
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.created = timezone.now()
-        self.updated = timezone.now()
-        return super().save(*args, **kwargs)
 
     def __str__(self):
         return '{}'.format(self.title)

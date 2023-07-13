@@ -10,7 +10,7 @@ CODE_VOCABULARY = string.ascii_letters + string.digits
 
 class TgUser(models.Model):
     chat_id = models.BigIntegerField()
-    user_id = models.BigIntegerField(unique=True)
+    user_ud = models.BigIntegerField(unique=True)
     username = models.CharField(max_length=512, verbose_name="tg username", null=True, blank=True, default=None)
     user = models.ForeignKey(User, models.PROTECT, null=True, blank=True, default=None)
     verification_code = models.CharField(max_length=32)

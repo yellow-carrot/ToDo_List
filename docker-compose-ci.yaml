@@ -2,33 +2,20 @@ version: '3.9'
 
 services:
 
-  frontend:
-    image: sermalenk/skypro-front:lesson-37
-    container_name: frontend
-    ports:
-      - "80:80"
-    depends_on:
-      api:
-        condition: service_started
-    volumes:
-      - django_static:/usr/share/nginx/nginx/html/django_static
-
-  api:
-    image: yellowcarrot/todolist:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
-    container_name: api
-    command: python manage.py runserver 0.0.0.0:8000
+  db:
+    image: postgres:15.2
     environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      SECRET_KEY: you-will-never-guess
-      SOCIAL_AUTH_VK_OAUTH2_KEY: ${SOCIAL_AUTH_VK_OAUTH2_KEY}
-      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${SOCIAL_AUTH_VK_OAUTH2_SECRET}
-    depends_on:
-      db:
-        condition: service_healthy
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    container_name: db
 
   migrations:
     image: yellowcarrot/todolist:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
@@ -47,20 +34,33 @@ services:
     command:
       sh -c "python ./manage.py migrate"
 
-  db:
-    image: postgres:15.2
+  api:
+    image: yellowcarrot/todolist:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
+    container_name: api
+    command: python manage.py runserver 0.0.0.0:8000
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-    volumes:
-      - ./pg_data:/var/lib/postgresql/data/
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    container_name: db
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SECRET_KEY: you-will-never-guess
+      SOCIAL_AUTH_VK_OAUTH2_KEY: ${SOCIAL_AUTH_VK_OAUTH2_KEY}
+      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${SOCIAL_AUTH_VK_OAUTH2_SECRET}
+    depends_on:
+      db:
+        condition: service_healthy
 
+  frontend:
+    image: sermalenk/skypro-front:lesson-37
+    container_name: frontend
+    ports:
+      - "80:80"
+    depends_on:
+      api:
+        condition: service_started
+    volumes:
+      - django_static:/usr/share/nginx/nginx/html/django_static
+      -
 volumes:
   django_static:

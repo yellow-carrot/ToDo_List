@@ -2,14 +2,41 @@ version: "3.9"
 
 services:
 
-  frontend:
-    image: sermalenk/skypro-front:lesson-37
-    container_name: frontend
+  db:
+    image: postgres:15.2
     ports:
-      - "80:80"
+      - "5432:5432"
+    env_file: .env
+    environment:
+      POSTGRES_DB: "todolist_postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
     restart: always
+    container_name: db
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d todolist_postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  migrations:
+    build:
+      context: .
+    env_file: .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+    container_name: migrations
     depends_on:
-      - api
+      db:
+        condition: service_healthy
+    command: python manage.py migrate
 
   api:
     build: .
@@ -33,41 +60,14 @@ services:
       migrations:
         condition: service_completed_successfully
 
-  migrations:
-    build:
-      context: .
-    env_file: .env
-    environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      SECRET_KEY: ${SECRET_KEY}
-    container_name: migrations
-    depends_on:
-      db:
-        condition: service_healthy
-    command: python manage.py migrate
-
-  db:
-    image: postgres:15.2
+  frontend:
+    image: sermalenk/skypro-front:lesson-37
+    container_name: frontend
     ports:
-      - "5432:5432"
-    env_file: .env
-    environment:
-      POSTGRES_DB: "todolist_postgres"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
+      - "80:80"
     restart: always
-    container_name: db
-    volumes:
-      - ./pg_data:/var/lib/postgresql/data/
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d todolist_postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+    depends_on:
+      - api
 
 volumes:
   db_data:

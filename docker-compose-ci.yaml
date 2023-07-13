@@ -61,6 +61,6 @@ services:
         condition: service_started
     volumes:
       - django_static:/usr/share/nginx/nginx/html/django_static
-      -
+
 volumes:
   django_static:

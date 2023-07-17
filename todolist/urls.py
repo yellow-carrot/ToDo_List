@@ -19,16 +19,13 @@ from django.contrib import admin
 from django.urls import path, include
 
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('core/', include(('core.urls', 'core'), namespace='core')),
-    path('oauth/', include('social_django.urls', namespace='social')),
-    path('goals/', include("goals.urls")),
-    path('bot/', include(('bot.urls', 'bot'), namespace="bot")),
+    path('oauth/', include('social_django.urls', namespace="social")),
+    path('core/', include(('core.urls', 'core'), namespace="core")),
+    path("goals/", include(('goals.urls', 'goals'), namespace="goals")),
+    path("bot/", include(('bot.urls', 'bot'), namespace="bot")),
+
+    path('accounts/', include('rest_framework.urls', namespace="rest_framework")),
 ]
 
-if settings.DEBUG:
-    urlpatterns += [
-        path('api-auth/', include('rest_framework.urls')),
-    ]

@@ -48,11 +48,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
+    'pytest',
+    'pytest_django',
     'core',
     'goals',
-    'bot',
     'social_django',
-
+    'bot',
 ]
 
 MIDDLEWARE = [

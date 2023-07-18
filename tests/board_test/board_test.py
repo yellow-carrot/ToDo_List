@@ -32,21 +32,6 @@ class TestBoardView:
         assert response.data['is_deleted'] == expected_response['is_deleted']
 
     def test_active_board_list_participant(self, auth_client, user) -> None:
-        """
-        Тест, чтобы убедиться, что аутентифицированный пользователь может получить
-        список активных досок, где пользователь является участником
-
-        Args:
-            auth_client: Клиент API с авторизованным пользователем для тестирования
-            user: Фикстура, создающая пользовательский экземпляр
-
-        Checks:
-            - Код статуса ответа — 200.
-            - Пользователь может получить ожидаемый список досок
-
-        Raises:
-            AssertionError
-        """
         active_boards = BoardFactory.create_batch(size=5)
 
         for board in active_boards:
@@ -59,21 +44,6 @@ class TestBoardView:
         assert response.data == expected_response, "doesnt match"
 
     def test_deleted_board_list_participant(self, auth_client, user) -> None:
-        """
-        Тест, чтобы убедиться, что аутентифицированный пользователь
-        не может получить список удаленных досок, где пользователь является участником
-
-        Args:
-            auth_client: Клиент API с авторизованным пользователем для тестирования
-            user: Фикстура, создающая пользовательский экземпляр
-
-        Checks:
-            - Код статуса ответа — 200.
-            - Пользователь может получить ожидаемый список досок
-
-        Raises:
-            AssertionError
-        """
         deleted_boards = BoardFactory.create_batch(size=5, is_deleted=True)
 
         for board in deleted_boards:
@@ -88,20 +58,6 @@ class TestBoardView:
         assert not response.data == unexpected_response, "got deleted boards"
 
     def test_board_list_not_participant(self, auth_client) -> None:
-        """
-        Тест, чтобы убедиться, что аутентифицированный пользователь не
-        может получить список досок, где пользователь не является участником
-
-        Args:
-            auth_client: Клиент API с авторизованным пользователем для тестирования
-
-        Checks:
-            - Код статуса ответа — 200.
-            - Пользователь может получить ожидаемый список досок
-
-        Raises:
-            AssertionError
-        """
         boards = BoardFactory.create_batch(size=5)
 
         for board in boards:
@@ -114,10 +70,6 @@ class TestBoardView:
         assert not response.data == unexpected_response, "got another boards"
 
     def test_board_list_deny(self, client) -> None:
-        """
-        Проверка того, что не аутентифицированные пользователи
-        не могут получить доступ к конечной точке API списка досок.
-        """
         response: Response = client.get(self.url)
 
         assert (
@@ -125,10 +77,6 @@ class TestBoardView:
         ), "no access"
 
     def test_active_board_retrieve_participant(self, auth_client, user) -> None:
-        """
-        Тест, чтобы убедиться, что аутентифицированный пользователь
-        может получить активную доску, где пользователь является участником
-        """
         board = BoardFactory()
         BoardParticipantFactory(board=board, user=user)
         url: str = reverse("goals:board_pk", kwargs={"pk": board.id})
@@ -140,10 +88,6 @@ class TestBoardView:
         assert response.data == expected_response, "not exact board"
 
     def test_deleted_board_retrieve_participant(self, auth_client, user) -> None:
-        """
-        Тест, чтобы проверить, что аутентифицированный пользователь не
-        может получить удаленную доску, где пользователь является участником
-        """
         board = BoardFactory(is_deleted=True)
         BoardParticipantFactory(board=board, user=user)
         url: str = reverse("goals:board_pk", kwargs={"pk": board.id})
@@ -155,10 +99,7 @@ class TestBoardView:
         assert not response.data == unexpected_response, "got deleted"
 
     def test_board_retrieve_not_participant(self, auth_client) -> None:
-        """
-        Тест, чтобы проверить, что аутентифицированный пользователь
-        не может получить доску, где пользователь не является участником
-        """
+
         board = BoardFactory(is_deleted=True)
         BoardParticipantFactory(board=board)
         url: str = reverse("goals:board_pk", kwargs={"pk": board.id})
@@ -170,11 +111,7 @@ class TestBoardView:
         assert not response.data == unexpected_response, "got another"
 
     def test_board_retrieve_deny(self, client) -> None:
-        """
-        Убедитесь, что пользователи, не прошедшие проверку
-        подлинности, не могут получить доступ к конечной точке
-        API board retrieve/update/destroy
-        """
+
         url: str = reverse("goals:board_pk", kwargs={"pk": 1})
         response: Response = client.get(url)
 
